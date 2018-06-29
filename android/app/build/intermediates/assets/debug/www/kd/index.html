@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+<head>
+    <!--
+    Customize this policy to fit your own app's needs. For more guidance, see:
+        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+
+
+</head>
+<body>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/test.js"></script>
+<script type="text/javascript" src="js/backgroundtimer.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    testgps();
+    console.log("위치정보 초기화 시작");
+});
+    </script>
+
+
+<button onclick="hi1()">안녕</button>
+<button onclick="startTimer(60)">안녕</button>
+<button onclick="odsaytest()">안녕</button>
+<button onclick="searchpathtest()">길찾기</button>
+<button onclick="testnotifi()">노티피</button>
+<button onclick="testgps()">gps</button>
+<a href="./maps.html">이동</a>
+<a href="http://ehdrms2034.ohseon.com/xe/hugeso1">휴게소</a>
+<a href="./timer/timer.html">타이머</a>
+<a href="./timer/bookmark.html">즐겨찾기 알람</a>
+<div id="ViewTimer"></div>
+<br>
+<button onclick = "timer_reset()">
+    리셋
+</button>
+
+
+
+</body>
+</html>

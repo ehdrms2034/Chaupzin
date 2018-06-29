@@ -1,0 +1,4 @@
+#Fri Jun 29 16:30:14 KST 2018
+base.0=C\:\\Users\\Kim Dong Geun\\Desktop\\real\\project\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\2
+renamed.0=classes.dex
+file.0=C\:\\Users\\Kim Dong Geun\\Desktop\\real\\project\\platforms\\android\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\2\\classes.dex

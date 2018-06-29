@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>버스 도착정보</title>
+</head>
+<body>
+<script>
+function input(){
+
+    var stationName = document.getElementById("input").value;//�˻��� �����Ҹ�
+	/*ODsay API ������������ȸ - �����ҹ�ȣ �Ľ�*/
+	var xhr = new XMLHttpRequest();
+    var url = "https://api.odsay.com/v1/api/searchStation?lang=0&stationName="+ stationName +"&apiKey=	tLAcniIcIqS6sD2MqrPcVw";
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) { 
+    var jsonData = JSON.parse(xhr.responseText);
+    showResult(jsonData);
+    businfo();
+  }
+};
+
+xhr.open("GET", url, true);
+xhr.send();
+
+var localStationID = new Array();//�����ҹ�ȣ
+var count = 0;
+function showResult(data) {
+    var i;
+    for (var i in data.result.station) {
+        localStationID[i] = data.result.station[i].localStationID;
+        count++;
+    }
+}   
+/*�������������� �λ������������ API - �����ҹ�ȣ �Է� -> �������� �Ľ�*/
+function businfo(){
+for (var k=0; k<=count; k++){
+	var xhr = new XMLHttpRequest();
+ 	var dataservicekey="J3etuYXOvRLXrXSKUs1vCttwfWqdsPiCzcuX1V9%2FwhyNWjrWPOGUOO%2F5fTfeAPMpzfOZtEH4CoVEFayZy%2Fq1%2Fw%3D%3D";//�������������м���Ű
+ 	var url = "http://61.43.246.153/openapi-data/service/busanBIMS2/stopArr?ServiceKey="+dataservicekey+"&bstopid="+localStationID[k]+"&_type=json"
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) { 
+    var jsonData = JSON.parse(xhr.responseText);
+    showResults(jsonData);
+  }
+}
+xhr.open("GET", url, true);
+xhr.send();
+};
+    var output = "<ul>";
+	var buscount=1;//��¹�ȣ���������� ����.
+for (var m=0; m<=x; m++){
+	output += "<li>" + buscount + "</li>";
+	output += "<li>" + "�����Ҹ� : " + nodeNm[m] + "</li>";
+    output += "<li>" + "���� ��ȣ : " + lineNo[m] + "��</li>";
+    output += "<li>" + "���� ���� : " + bustype[m] + "</li>";
+    output += "<li>" + "���� ���� �ð� : " + min1[m] +"��, "+min2[m] +"��</li>";
+    output += "<li>" + "���� ������ �� : " + station1[m] +"������, "+station2[m]+ "������</li>";
+	buscount++;
+};
+output += "</ul>";
+document.getElementById("resultlist").innerHTML = output;
+}
+var lineNo = new Array();//������ȣ
+var bustype = new Array();//��������(�Ϲ�,�¼�)
+var min1 = new Array();//���� �� ���������ð�
+var min2 = new Array();//�Ĺ� �� ���������ð�
+var station1 = new Array();//���� �� �����������
+var station2 = new Array();//�Ĺ� �� �����������
+var nodeNm = new Array();//�������
+var j=0;//array count��
+var x=0;//�������������� �λ������������ API�� ������ �������� -> �������� �������̱� ����. ���� for���� ���������� �迭�� ũ�⸦ üũ�� �� �־����.
+function showResults(data) {
+	    var i;
+	    for (var i in data.response.body.items.item) {
+	      //output�� �ٷ��������� �迭�ȿ� ��Ƽ� for������ �ѹ��� �������
+	      	lineNo[x+i] = data.response.body.items.item[i].lineNo;
+	      	bustype[x+i] = data.response.body.items.item[i].bustype;
+	      	min1[x+i] = data.response.body.items.item[i].min1;
+	      	min2[x+i] = data.response.body.items.item[i].min2;
+	      	station1[x+i] = data.response.body.items.item[i].station1;
+	      	station2[x+i] = data.response.body.items.item[i].station2;
+	      	nodeNm[x+i] = data.response.body.items.item[i].nodeNm;
+	      	j++;
+	    }
+	    x += data.response.body.items.item;
+	    
+}
+}
+/////////////////////////////////////////////////////////////////////////////
+</script>
+<font size=0.5>�����Ҹ�</font>
+<input type="text" id="input">
+<button onclick="input()">�˻�</button>
+<div id="resultlist"></div>
+</body>
+</html>

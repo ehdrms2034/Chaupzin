@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>알람</title>
+    <script type = "text/javascript" src = "http://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script type = "text/javascript">
+$(document).ready(function(){
+	$("input[id='intercitybus']").click(function(){
+		$("div[id='intercity']").fadeIn(0);
+		$("div[id='city']").fadeOut(0);
+		$("div[id='train_']").fadeOut(0);
+	});
+	$("input[id='citybus']").click(function(){
+		$("div[id='intercity']").fadeOut(0);
+		$("div[id='city']").fadeIn(0);
+		$("div[id='train_']").fadeOut(0);
+	});
+	$("input[id='train']").click(function(){
+		$("div[id='intercity']").fadeOut(0);
+		$("div[id='city']").fadeOut(0);
+		$("div[id='train_']").fadeIn(0);
+	});
+});
+    </script>
+    <style>
+header{
+	padding : 25px;
+	color: white;
+	background-color: black;
+	clear: left;
+	text-align: center;
+}
+</style>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+</head>
+<body>
+<header>
+<div class = "btn-group" data-toggle = "buttons">
+<label class="btn btn-success active">
+<input type = "radio" name = "trans" id = "intercitybus" autocomplete = "off" onclick = "document.getElementById('intercitybus').innerHTML = IntercityBus()" checked = "checked"><label for = "intercitybus">시외버스</label>
+<span class="glyphicon glyphicon-ok"></span>
+</label>
+<label class="btn btn-success active">
+<input type = "radio" name = "trans" id = "citybus" autocomplete = "off" onclick = "document.getElementById('citybus').innerHTML = CityBus()"><label for = "citybus">시내버스</label>
+<span class="glyphicon glyphicon-ok"></span>
+</label>
+<label class="btn btn-success active">
+<input type = "radio" name = "trans" id = "train" autocomplete = "off" onclick = "document.getElementById('train').innerHTML = Train()"><label for = "train">기차</label>
+<span class="glyphicon glyphicon-ok"></span>
+</label>
+</div>
+</header>
+
+<!-- 시외버스 -->
+<form action = "alarm_result_suburb_intercity.html" method = "post">
+    <div id = "intercity">
+        <label for = "start_in">출발지</label>
+        <input name = "start" type = "text" id = "start_in" /><br>
+        <label for = "finish_in">목적지</label>
+        <input name = "finish" type = "text" id = "finish_in"/>
+        <input type = "submit" value = "검색"/><br>
+    </div>
+</form>
+
+<!-- 시내버스 -->
+<form action = "alarm_result_suburb_city.html" method = "post">
+    <div id = "city" style="display:none;">
+
+        <label for = "citybus">버스 번호</label>
+        <input name = "citybus_num" type = "text" id = "citybusNo" />
+        <button onclick="searchBusLaneAJAX();">검색</button>
+        <div id="resultDiv">
+        </div>
+
+    </div>
+</form>
+
+<script>
+        function searchBusLaneAJAX(){
+        	var busNo = document.getElementById('busNo').value;
+        	var xhr = new XMLHttpRequest();
+        	var url = "https://api.odsay.com/v1/api/searchBusLane?apiKey=HQZtOhwlRB+1zCPJEq0QOQ&busNo=" + busNo;
+        	xhr.open("GET", url, true);
+        	xhr.send();
+        	xhr.onreadystatechange = function(){
+        		if(xhr.readyState == 4 && xhr.status == 200){
+        			var resultObj = JSON.parse(xhr.responseText);
+		        	console.log(resultObj.result);
+        			var resultArr = resultObj["result"]["lane"];
+	        		console.log(resultArr);
+
+	        		var str = "";
+		           	for(var i = 0; i < resultArr.length; i++){
+		    		str+="<div class='box'>";
+		    		str+="<p>지역이름: " + resultArr[i].busCityName + "</p>";
+		    		str += "<p>버스회사 : " + resultArr[i].busCompanyNameKor + "</p>";
+	    			str += "<p>버스번호 : " + resultArr[i].busNo + "</p>";
+	    			str += "<p>출발점 / 도착점 : " + resultArr[i].busStartPoint + " - "
+					+ resultArr[i].busEndPoint + "</p>";
+	    			str += "</div>";
+	    		}
+			document.getElementById("resultDiv").innerHTML = str;
+    		}
+    	}
+    }
+</script>
+
+<!-- 기차 -->
+<form action = "alarm_result_suburb_train.html" method = "post">
+<div id = "train_" style="display:none;">
+<label for = "start_t">출발지</label>
+<input name = "start" type = "text" id = "start_t" /><br>
+<label for = "finish_t">목적지</label>
+<input name = "finish" type = "text" id = "finish_t"/>
+<input type = "submit" value = "검색"/><br>
+</div>
+</form>
+
+<script>
+            function init() {
+
+                var input1 = document.getElementById('start_in');
+                var autocomplete = new google.maps.places.Autocomplete(input1);
+
+                var input2 = document.getElementById('finish_in');
+                var autocomplete = new google.maps.places.Autocomplete(input2);
+            }
+            function init2(){
+               var input3 = document.getElementById('start_t');
+                var autocomplete = new google.maps.places.Autocomplete(input3);
+
+                var input4 = document.getElementById('finish_t');
+                var autocomplete = new google.maps.places.Autocomplete(input4);
+            }
+
+            google.maps.event.addDomListener(window, 'load', init);
+            google.maps.event.addDomListener(window, 'load', init2);
+</script>
+
+</body>
+</html>

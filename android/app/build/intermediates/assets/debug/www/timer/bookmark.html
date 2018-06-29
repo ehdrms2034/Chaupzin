@@ -1,0 +1,101 @@
+<!doctype html>
+<!--[if lt IE 7 ]><html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]><html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]><html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]><html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+
+<!-- main JS libs -->
+
+<script type="text/javascript" src="../cordova.js"></script>
+
+<script src="js/libs/modernizr.min.js"></script>
+<script src="js/libs/jquery-1.10.0.js"></script>
+<script src="js/libs/jquery-ui.min.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+
+<!-- Style CSS -->
+<link href="css/bootstrap.css" media="screen" rel="stylesheet">
+<link href="style.css" media="screen" rel="stylesheet">
+
+<!-- scripts -->
+<script src="js/general.js"></script>
+
+<!-- Include all needed stylesheets and scripts here -->
+    <script src="myjs/bookmark.js"></script>
+    <script src="myjs/system.js"></script>
+    <script>$(document).ready(function(){
+        
+        var source="";
+        var source_first ="<div class='comment-body boxed'><div class='comment-arrow'></div><div class='comment-avatar'><div class='avatar'><img src='";    
+        //그다음 이미지
+        var source_second = "' alt=''></div></div><div class='comment-text'><div class='comment-author clearfix'><a href='#' class='link-author' hidefocus='true' style='outline: medium none currentcolor;'>";
+        //그다음 뭐 어디가는 거
+        var source_third = "</a></div><div class='comment-entry'>";
+        //그다음 내용
+        var source_fourth = "</div></div><div class='clear'></div></div>";
+    
+        for(let i=0; i<5;i++){
+        let temp;
+        temp = localStorage.getItem("odsay_checked_alarm"+i);
+
+        if(!temp){continue;}
+        else{
+            //alert(temp);
+            let x = JSON.parse(temp);
+            //alert(x);
+            source+=source_first;
+            if(x.vehicle=="2"){source+="myimage/train.png";}
+            else{source+="myimage/bus.png";}
+            source+=source_second;
+            source+=x.paths+"행";
+            source+=source_third;
+            source+=x.stationName+"역/정거장"+"<br>"+x.hour+"시 "+x.min+"분 알람예정";
+            source+=source_fourth;
+            //alert(source);
+        }
+
+    }
+
+            var Node = document.getElementById("inner");
+            Node.innerHTML=source;
+                    
+            setTimeout(setonAlarm(),3000);            
+                    
+                    });</script>
+
+<!--[if lt IE 9]><script src="js/respond.min.js"></script><![endif]-->
+<!--[if gte IE 9]>
+<style type="text/css">
+    .gradient {filter: none !important;}
+</style>
+<![endif]-->
+</head>
+
+<body>
+    <!-- container -->
+    <div class="widget-container progressBars boxed">
+        <h3 class = "widget-title">즐겨찾기 알람</h3>
+        <div class="inner" name="inner" id="inner">
+            
+
+
+    </div>
+    <!--/ container -->
+</body>
+</html>
+
+
+<script>
+
+    /*
+     자주가기 알람
+    */
+
+</script>

@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <title>알람</title>
+    <!-- 버스노선 -->
+    <style type="text/css">
+.box{
+	width:400px;
+	height: AUTO;
+	border: 1px solid green;
+	border-radius: 5px;
+	padding: 15px;
+	margin: 15px;
+	overflow-y: scroll;
+}
+</style>
+    <!-- header 버튼 -->
+    <script type = "text/javascript" src = "http://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script type = "text/javascript">
+//버스,지하철 선택
+$(document).ready(function(){
+	$("input[id='bus']").click(function(){
+		$("div[id='bus_side']").show();
+		$("div[id='subway_side']").hide();
+	});
+	$("input[id='subway']").click(function(){
+		$("div[id='bus_side']").hide();
+		$("div[id='subway_side']").show();
+	});
+});
+
+//버스 노선
+$(document).ready(function(){
+    $("input[id='busNo']").click(function(){
+        $("div[id='result']").show();
+    });
+});
+
+//지하철 노선 선택
+$(document).ready(function(){
+    $("option[value = 'S2601']").click(function(){
+        $("div[id='Line1']").show();
+        $("div[id='Line2']").hide();
+        $("div[id='Line3']").hide();
+        $("div[id='Line4']").hide();
+    });
+    $("option[value = 'S2602']").click(function(){
+        $("div[id='Line1']").hide();
+        $("div[id='Line2']").show();
+        $("div[id='Line3']").hide();
+        $("div[id='Line4']").hide();
+    });
+    $("option[value = 'S2603']").click(function(){
+        $("div[id='Line1']").hide();
+        $("div[id='Line2']").hide();
+        $("div[id='Line3']").show();
+        $("div[id='Line4']").hide();
+    });
+    $("option[value = 'S2604']").click(function(){
+        $("div[id='Line1']").hide();
+        $("div[id='Line2']").hide();
+        $("div[id='Line3']").hide();
+        $("div[id='Line4']").show();
+    });
+});
+
+//지하철 노선 표시도
+$(document).ready(function(){
+        $("input[id='subway']").click(function(){
+            $.ajax({
+                type:"GET",
+                dataType:"xml",
+                url:"부산교통공사_도시철도노선정보_20180130.xml",
+                success:function(xml){
+                    var xmlData = $(xml).find("Row");
+                    var listLength = xmlData.length;
+                    if(listLength){
+                        var contentStr = "";
+                        $(xmlData).each(function(){
+                            contentStr += "노선번호: " + $(this).find("노선명").text() + "</br>" + $(this).find("정거장구성").text() + "</br>";
+                        });
+                        $("#result").append(contentStr);
+                    }
+                }
+            });
+        });
+});
+    </script>
+</head>
+<body>
+<header>
+    <input type = "radio" name = "trans" id = "bus" onclick = "document.getElementById('bus').innerHTML = Bus()" checked = "checked"><label for = "bus">버스</label>
+    <input type = "radio" name = "trans" id = "subway" onclick = "document.getElementById('subway').innerHTML = Subway()"><label for = "subway">지하철</label>
+</header>
+
+<!-- bus 검색 -->
+<div id = "bus_side" >
+    <form action = "alarm_result_downtown_bus.html" method="get">
+    <label for = "bus">버스 번호</label>
+    <input name = "bus_num" type = "text" id = "busNo" />
+    <button >검색</button>
+    <div id="resultDiv">
+    </div>
+    </form>
+</div>
+
+<!-- subway 검색 -->
+<div id = "subway_side" style="display:none;">
+    <form action = "alarm_result_downtown_subway.html">
+    <label for = "subway">지하철 호선</label>
+    <select>
+        <option value="S2601">1호선
+        <option value="S2602">2호선
+        <option value="S2603">3호선
+        <option value="S2604">4호선
+    </select>
+    <div id = "result">
+    </div>
+    </form>
+</div>
+
+</body>
+</html>

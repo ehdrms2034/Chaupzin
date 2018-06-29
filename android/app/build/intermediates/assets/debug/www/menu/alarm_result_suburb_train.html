@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+    <script type="text/javascript" charset="utf-8">
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+        var watchID = null;
+
+        function onDeviceReady(){
+            var options = {frequency : 3000};
+            watchID=navigator.geolocation.watchPosition(onSuccess, onError, options);
+         }
+
+         function onSuccess(position){
+            var element = document.getElementById('geolocation');
+            element.innerHTML =
+                'Latitude:'     + position.coords.latitude      + '<br />'+
+                'Longitude:'    + position.coords.longitude     + '<br />'+
+                'Altitude:'     + position.coords.altitude      + '<br />'+
+                'Accuracy:'     + position.coords.accuracy      + '<br />'+
+                'Altitude Accuracy:'+ position.coords.altitudeAccuracy + '<br />'+
+                'Heading:'      + position.coords.heading       + '<br />'+
+                'Speed:'        + position.coords.speed         + '<br />'+
+                'Timestamp:'    + position.coords.timestamp     + '<br />'+
+                '<hr />'        + element.innerHTML;
+         }
+
+        function onError(error){
+            alert('code:'   + error.code    +'\n'+
+                    'message:'+error.message+'\n');
+    </script>
+    <script type = "text/javascript" src = "http://code.jquery.com/jquery-3.2.0.min.js"></script>
+    <script type = "text/javascript">
+        $(document).ready(function(){
+	        $("button[id='alarm']").click(function(){
+		        $("div[id='alarm']").fadeIn(0);
+	        });
+        });
+    </script>
+<style>
+header{
+	padding : 25px;
+	color: white;
+	background-color: black;
+	clear: left;
+	text-align: center;
+}
+</style>
+</head>
+<body>
+
+<!-- 출발지/목적지 값 -->
+<script type="text/javascript">
+var start = Document.getElementById("start").value;
+var finish = Document.getElementById("finish").value;
+console.log(start);
+console.log(finish);
+</script>
+
+<header>
+    <input type ="hidden" id="start" name ="start">
+    <h2><script type="text/javascript">document.write(start);</script>에서
+         <script type="text/javascript">document.write(finish);</script></h2>
+</header>
+<button type = "button" onclick = "document.getElementById('alarm').innerHTML = alarm()" id="alarm_B">알람을 시작할까요?</button>
+
+</div>
+</body>
+</html>

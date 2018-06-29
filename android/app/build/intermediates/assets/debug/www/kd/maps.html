@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+
+    <script type="text/javascript" src="js/test.js"></script>
+    <script type="text/javascript" src="js/backgroundtimer.js"></script>
+</head>
+<body>
+
+<script>
+
+                var sync=0;
+                var lat=localStorage.getItem('gps_lat');
+                var lng=localStorage.getItem('gps_long');
+                var geocode="https://maps.googleapis.com/maps/api/geocode/json?latlng="+lat+","+lng+"&key=AIzaSyCkuXdhqsx8dimaTDyk8LQV9p3F8aj0lUA";
+                //document.getElementById("message").innerHTML=geocode;
+
+                var result = jQuery.ajax({
+                     url: geocode,
+                     type: 'POST',
+                        success: function(myJSONResult){
+
+                                 if(myJSONResult.status == 'OK') {
+                                     var tag = "";
+                                     var i;
+                                     var whereis = myJSONResult.results[0].address_components[4].long_name;
+                                     console.log(whereis);
+
+                                    //여기서 휴게소 연결 시작
+                                    if(whereis=="경기도"||whereis=="서울특별시"||whereis=="인천광역시"){
+                                        //alert("경기도 휴게소");
+                                        location.href="http://ehdrms2034.ohseon.com/xe/hugeso1";
+                                    }
+                                    else if(whereis=="강원도"){
+                                        //alert("강원도 휴게소");
+                                        location.href="http://ehdrms2034.ohseon.com/xe/hugeso2";
+                                    }else if(whereis=="충청북도"||whereis=="충청남도"||whereis=="대전광역시"){
+                                        //alert("충청도 휴게소");
+                                        location.href="http://ehdrms2034.ohseon.com/xe/hugeso3";
+                                    }else if(whereis=="전라남도"||whereis=="전라북도"||whereis=="광주광역시"){
+                                        //alert("충청도 휴게소");
+                                        location.href="http://ehdrms2034.ohseon.com/xe/hugeso4";
+                                    }else if(whereis=="경상북도"||whereis=="경상남도"||whereis=="부산광역시"||whereis=="울산광역시"||whereis=="대구광역시"){
+                                        //alert("경상도 휴게소");
+                                        location.href="http://ehdrms2034.ohseon.com/xe/hugeso5";
+                                    }else{
+                                        alert("위치정보 오류, 위치정보 다시 받아주시길 바랍니다.");
+                                        history.back();
+                                    }
+
+
+                                     //document.getElementById("message").innerHTML = tag;
+                                 } else if(myJSONResult.status == 'ZERO_RESULTS') {
+                                     alert("지오코딩이 성공했지만 반환된 결과가 없음을 나타냅니다.\n\n이는 지오코딩이 존재하지 않는 address 또는 원격 지역의 latlng을 전달받는 경우 발생할 수 있습니다.")
+                                 } else if(myJSONResult.status == 'OVER_QUERY_LIMIT') {
+                                     alert("할당량이 초과되었습니다.");
+                                 } else if(myJSONResult.status == 'REQUEST_DENIED') {
+                                     alert("요청이 거부되었습니다.\n\n대부분의 경우 sensor 매개변수가 없기 때문입니다.");
+                                 } else if(myJSONResult.status == 'INVALID_REQUEST') {
+                                     alert("일반적으로 쿼리(address 또는 latlng)가 누락되었음을 나타냅니다.");
+                                 }
+                         }
+                 });
+
+
+
+
+             </script>
+
+</body>
+<div id="message"></div>
+</html>
+
+
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Insert title here</title>
+<style>
+header{
+	padding : 25px;
+	color : white;
+	background-color: black;
+	clear: left;
+	text-align: center;
+}
+</style>
+    <script type="text/javascript">
+var bus_num = Document.getElementById("bus_num");
+console.log(bus_num);
+</script>
+    <script>
+
+    </script>
+</head>
+<body>
+<header>
+<h1><script type="text/javascript">document.write(bus_num);</script>번의 노선</h1>
+</header>
+<!-- 버스 이용시, -->
+<div id = "bus">
+<script>
+var xhr = new XMLHttpRequest();
+var url = 'http://ws.bus.go.kr/api/rest/stationinfo/getStationByPos'; /*URL*/
+var queryParams = '?' + encodeURIComponent('ServiceKey') + '=' + L2mVw6G2hiMrBHjxdveIVo%2BOFBBbE%2BQr%2B1Rcr3N%2BFT9E5Fzi7TTtT22U4QkLsTRedckKmgmKyOBZkpqONlMXGw%3D%3D; /*Service Key*/
+queryParams += '&' + encodeURIComponent('tmX') + '=' + encodeURIComponent('); /*기준위치 X*/
+queryParams += '&' + encodeURIComponent('tmY') + '=' + encodeURIComponent('); /*기준위치 Y*/
+queryParams += '&' + encodeURIComponent('radius') + '=' + encodeURIComponent('); /*단위 m(미터)*/
+xhr.open('GET', url + queryParams);
+xhr.onreadystatechange = function () {
+    if (this.readyState == 4) {
+        alert('Status: '+this.status+' Headers: '+JSON.stringify(this.getAllResponseHeaders())+' Body: '+this.responseText);
+    }
+};
+xhr.send('');
+</script>
+</div>
+
+<!-- 지하철 이용시, -->
+<div id = "subway">
+    <script>
+
+    </script>
+</div>
+
+</body>
+</html>

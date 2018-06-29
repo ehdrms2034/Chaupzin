@@ -1,0 +1,308 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title>길찾기 결과</title>
+</head>
+<body>
+<!-- Naver Developers에서 발급받은 네이버지도 Application Key 입력  -->
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=zGzNqn7Ft0bHUdEXJrOo"></script>
+
+<script src="js/libs/modernizr.min.js"></script>
+<script src="js/libs/jquery-1.10.0.js"></script>
+<script src="js/libs/jquery-ui.min.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+
+<!-- Style CSS -->
+<link href="css/bootstrap.css" media="screen" rel="stylesheet">
+<link href="style.css" media="screen" rel="stylesheet">
+
+<!-- scripts -->
+<script src="js/general.js"></script>
+
+<script>
+
+var count1=1;
+var count2=1;
+var lat=0; // 출발지 위도경도
+var lng=0;
+var lat2=0; // 도착지 위도경도
+var lng2=0;
+var endx = new Array();//하차정거장 위도경도
+var endy = new Array();
+var startx = new Array(); // 승차정거장 위도경도
+var starty = new Array();
+/*위도경도 변환 함수*/
+
+function input(){ // 출발지 위도경도 변환 - 구글지도 위경도변환 API 사용
+    var searchName = document.getElementById("input").value;
+    var xhr = new XMLHttpRequest();
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+searchName+"&key=AIzaSyDr57Os3YuTD6fbFzu6D_-fDqAnZQt9eA0";
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) { 
+    var jsonData = JSON.parse(xhr.responseText);
+    showResults(jsonData);
+  }
+};
+xhr.open("GET", url, true);
+xhr.send();
+function showResults(data) {
+    var output = "<ul>";
+    var i;
+    for (var i in data.results) {
+        output += "<li>" + "lat : " +data.results[i].geometry.location.lat + " , lng : " + data.results[i].geometry.location.lng + "</li>";
+        lat = data.results[i].geometry.location.lat;//API에서 반환된 JSON 객체정보 파싱
+        lng = data.results[i].geometry.location.lng;
+    }
+    output += "</ul>";
+    if (lat!=0 && lng!=0) alert(searchName+'을(를) 입력하셨습니다.')//지역명이 제대로 입력되었는 지 확인.
+    else alert('지역명을 정확히 입력하세요.')
+    }
+}
+function input2(){ // 도착지 위도경도 변환
+    var searchName = document.getElementById("input2").value;
+    var xhr = new XMLHttpRequest();
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+searchName+"&key=AIzaSyDr57Os3YuTD6fbFzu6D_-fDqAnZQt9eA0";
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == 4 && xhr.status == 200) { 
+    var jsonData = JSON.parse(xhr.responseText);
+    showResults(jsonData);
+  }
+};
+xhr.open("GET", url, true);
+xhr.send();
+function showResults(data) {
+    var output = "<ul>";
+    var i;
+    for (var i in data.results) {
+        output += "<li>" + "lat : " +data.results[i].geometry.location.lat + " , lng : " + data.results[i].geometry.location.lng + "</li>";
+        lat2 = data.results[i].geometry.location.lat;
+        lng2 = data.results[i].geometry.location.lng;
+    }
+    output += "</ul>";
+    if (lat2!=0 && lng2!=0) alert(searchName+'을(를) 입력하셨습니다.')
+    else alert('지역명을 정확히 입력하세요.')
+    }
+}
+/*길찾기 실행 함수*/
+function LoadSearch(){
+    var SearchPathType=0; // 이동수단. 체크안할 시 버스+지하철로 검색
+    var sx = lng;
+	var sy = lat;
+	var ex = lng2;
+	var ey = lat2;
+	
+	
+	var mapOptions = {
+		center: new naver.maps.LatLng(sy, sx),
+		zoom: 7
+	};
+
+	var map = new naver.maps.Map('map', mapOptions);
+	var startName;
+	
+	function searchPubTransPathAJAX() {
+	var checkboxbus=false, checkboxsubway=false, checkboxboth=false, checkcomplete;
+	checkboxbus = document.getElementById("bus").checked;
+	checkboxsubway = document.getElementById("subway").checked;
+	checkboxboth = document.getElementById("both").checked;
+	if (checkboxbus == true) checkcomplete=2;//checkbox의 값 가져오기. 체크 안할 시 bus+subway로 검색.
+	else if(checkboxsubway == true) checkcomplete=1;
+	else checkcomplete=0; 
+	
+	
+		var xhr = new XMLHttpRequest();
+		//ODsay URL 호출. SX,SY,EX,EY -출발지도착지위도경도정보, SearchPathType -이동수단정보
+		var url = "https://api.odsay.com/v1/api/searchPubTransPath?SX="+sx+"&SY="+sy+"&EX="+ex+"&EY="+ey +"&SearchPathType="+ checkcomplete +"&apiKey=tLAcniIcIqS6sD2MqrPcVw";
+		xhr.open("GET", url, true);
+		xhr.send();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+			console.log( JSON.parse(xhr.responseText) ); // <- xhr.responseText 로 결과를 가져올 수 있음
+			var jsonData = JSON.parse(xhr.responseText);
+			    showResults(jsonData);
+		    
+			//노선그래픽 데이터 호출
+			callMapObjApiAJAX((JSON.parse(xhr.responseText))["result"]["path"][0].info.mapObj);
+			}
+		}
+	}
+	function showResults(data) {
+    var output = "<ul>";
+    var i;  
+    var count=1;//환승정거장횟수 카운트- 다중마커 찍는 용도로 사용.
+//    for (var i in data.result.path) {
+
+        if (data.result == null) {
+            alert(data.error.msg);
+        }
+    	output += "<li>" + "최초 출발 정거장/역 : " +data.result.path[0].info.firstStartStation+"</li><li>"+ "총 이동거리 : " + data.result.path[0].info.totalDistance + "m</li>";
+    	for (var i in data.result.path[0].subPath){
+    	  
+    	  if (data.result.path[0].subPath[i].trafficType ==1) trafficType="지하철"
+    	  else if (data.result.path[0].subPath[i].trafficType ==2) trafficType="버스"
+    	  if (data.result.path[0].subPath[i].trafficType ==3) trafficType="도보"
+    	 ;
+    	 
+    	 if (data.result.path[0].subPath[i].trafficType != 3){
+    	 output +=   "<li>"+ count + "</li><li>"+ "이동수단 : " + trafficType +"</li>"
+    	 output += "<li>탑승 정거장/역 : "+ data.result.path[0].subPath[i].startName +"</li>";
+    	 if (i != 0){
+    	 startx[count2] = data.result.path[0].subPath[i].startX;
+    	 starty[count2] = data.result.path[0].subPath[i].startY;
+    	 count2 ++;
+    	     
+    	 }
+    	 if (i != data.result.path){
+    	 endx[count1] = data.result.path[0].subPath[i].endX;
+    	 endy[count1] = data.result.path[0].subPath[i].endY;
+    	 count1 ++;
+    	 
+    	 }
+    	 count ++;
+    	 }
+    	 if(data.result.path[0].subPath[i].trafficType == 2){
+    	 output += "<li>버스번호 : "+ data.result.path[0].subPath[i].lane[0].busNo +"번</li>";
+    	 
+    	 output +=   "<li>" + "이동거리 : " + data.result.path[0].subPath[i].distance +"m</li>";
+    	 output +=   "<li>" + "하차 정거장/역 : " + data.result.path[0].subPath[i].endName +"</li>";
+    	 
+    	 }
+    	 if(data.result.path[0].subPath[i].trafficType == 1){
+    	 output += "<li>지하철 노선명 : "+ data.result.path[0].subPath[i].lane[0].name +"</li>";
+    	 
+    	 output +=   "<li>" + "이동거리 : " + data.result.path[0].subPath[i].distance +"m</li>";
+    	 output +=   "<li>" + "하차 정거장/역 : " + data.result.path[0].subPath[i].endName +"</li>";
+    	 
+    	     
+    	 }
+    	 
+    	}
+    	
+    	 output +=   "<li>" + "최종 도착 정거장/역 : " + data.result.path[0].info.lastEndStation +"</li>"
+    	//1지하철2버스3도보
+//    }
+    output += "</ul>";
+    
+     document.getElementById("resultlist").innerHTML = output;
+	}
+
+	//길찾기 API 호출
+	searchPubTransPathAJAX();
+	
+	function callMapObjApiAJAX(mabObj){
+		var xhr = new XMLHttpRequest();
+		
+		var url = "https://api.odsay.com/v1/api/loadLane?mapObject=0:0@"+mabObj+"&apiKey=tLAcniIcIqS6sD2MqrPcVw";
+		xhr.open("GET", url, true);
+		xhr.send();
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				var resultJsonData = JSON.parse(xhr.responseText);
+				drawNaverMarker(sx,sy);					// 출발지 마커 표시
+				drawNaverMarker(ex,ey);					// 도착지 마커 표시
+				
+				for (var i=1; i<=count2; i++){
+				    drawNaverMarker(startx[i],starty[i]);//환승지 마커 표시
+				}
+				for (var i=1; i<=count1; i++){
+				drawNaverMarker(endx[i],endy[i]);
+				}
+				
+				drawNaverPolyLine(resultJsonData);		// 노선그래픽데이터 지도위 표시
+				// boundary 데이터가 있을경우, 해당 boundary로 지도이동
+				if(resultJsonData.result.boundary){
+						var boundary = new naver.maps.LatLngBounds(
+				                new naver.maps.LatLng(resultJsonData.result.boundary.top, resultJsonData.result.boundary.left),
+				                new naver.maps.LatLng(resultJsonData.result.boundary.bottom, resultJsonData.result.boundary.right)
+				                );
+						map.panToBounds(boundary);
+				}
+			}
+		}
+	}
+	
+	// 지도위 마커 표시해주는 함수
+	function drawNaverMarker(x,y){
+		var marker = new naver.maps.Marker({
+		    position: new naver.maps.LatLng(y, x),
+		    map: map
+		});
+	}
+	
+	// 노선그래픽 데이터를 이용하여 지도위 폴리라인 그려주는 함수
+	function drawNaverPolyLine(data){
+		var lineArray;
+		
+		for(var i = 0 ; i < data.result.lane.length; i++){
+			for(var j=0 ; j <data.result.lane[i].section.length; j++){
+				lineArray = null;
+				lineArray = new Array();
+				for(var k=0 ; k < data.result.lane[i].section[j].graphPos.length; k++){
+					lineArray.push(new naver.maps.LatLng(data.result.lane[i].section[j].graphPos[k].y, data.result.lane[i].section[j].graphPos[k].x));
+				}
+				
+			//지하철 노선에 따른 라인색상 지정하는 부분 (1,2호선은 색 할당)
+				if(data.result.lane[i].type == 1){
+					var polyline = new naver.maps.Polyline({
+					    map: map,
+					    path: lineArray,
+					    strokeWeight: 3,
+					    strokeColor: '#003499'
+					});
+				}else if(data.result.lane[i].type == 2){
+					var polyline = new naver.maps.Polyline({
+					    map: map,
+					    path: lineArray,
+					    strokeWeight: 3,
+					    strokeColor: '#37b42d'
+					});
+				}else{
+					var polyline = new naver.maps.Polyline({
+					    map: map,
+					    path: lineArray,
+					    strokeWeight: 3
+					});
+				}
+			}
+		}
+	}
+}
+</script>
+
+
+<div class="widget-container progressBars boxed">
+        <h3 class = "widget-title">길 찾기</h3>
+        <div class="inner" name="inner" id="inner">
+				<font color='#ff0000'>*</font>
+				<font size=0.5>총 이동거리 700m이하는 검색되지 않습니다.</font><br>
+				<font size=1>출발지</font>
+				<input type="text" id="input">
+				<a onclick="input()" class="btn btn-green" ><span>검색</span></a>
+				<br>
+				<font size=1>도착지</font>
+				<input type="text" id="input2">
+				<a onclick="input2()" class="btn btn-green"><span>검색</span></a>
+				
+				
+				<font size="2"><div class="input_styled checklist">
+						<div class="rowCheckbox"><input type="checkbox" id="bus" name="bus"> 버스
+							<input type="checkbox" id="subway" name="subway"> 지하철
+							<input type="checkbox" id="both" name="both"> 버스+지하철</font><br>
+							</div>
+						</div>
+				 <a onclick="LoadSearch()" class="btn btn-green" style="margin-left: 80%"><span>길 찾기</span></a>
+				 
+
+    </div>
+	<!--/ container -->
+	
+		
+		
+		
+
+<div id="map" style="width:100%;height:400px;"></div>
+<div id="resultlist"></div>
+</body>
+</html>

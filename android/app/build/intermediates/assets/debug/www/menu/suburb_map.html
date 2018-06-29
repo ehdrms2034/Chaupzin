@@ -1,0 +1,65 @@
+<%@ page language="java" contentType="text/html; charset=EUC-KR"
+    pageEncoding="EUC-KR"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>map</title>
+<meta name = "viewport" content = "width=device-width,initial-scale=1.0">
+<style>
+	#map{
+		height: 100%;
+	}
+	html, body{
+		height: 100%;
+		margin: 0;
+		padding: 0;
+	}
+	ul{
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		overflow: hidden;
+		background-color:#333333;
+	}
+	li{
+		float: left;
+	}
+	li a{
+		display:block;
+		color:white;
+		text-align: center;
+		padding: 16px;
+		text-decoration: none;
+	}
+	li a:hover{
+		background-color: #111111;
+	}
+</style>
+</head>
+<body>
+<ul>
+	<li><a href="#alarm">알람</a></li>
+	<li><a href="#transport">교통량</a></li>
+	<li><a href="accident.jsp">사고정보</a></li>
+	<li><a href="cctv.jsp">CCtv</a></li>
+</ul>
+<div id = "map"></div>
+<script>
+	var map;
+	function initMap(){
+		var uluru = {lat: 35.231011, lng: 129.082277}; //부산대 6공학관 기준
+		map = new google.maps.Map(document.getElementById('map'), {
+			zoom: 15,
+			center: uluru
+		});
+		var marker = new google.maps.Marker({
+			position: uluru,
+			map: map
+		});
+	}
+</script>
+<script src = "http://maps.googleapis.com/maps/api/js?key=AIzaSyAqx6PWcuaEEj0-t7pltmivQ61e-hKmuPQ&callback=initMap"
+async defer></script>
+</body>
+</html>

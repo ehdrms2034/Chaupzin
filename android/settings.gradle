@@ -1,0 +1,4 @@
+// GENERATED FILE - DO NOT EDIT
+include ":", ':odsay_sdk1.0'
+include ":CordovaLib"
+include ":app"

@@ -1,0 +1,66 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <title>알람</title>
+    <script type = "text/javascript" src = "http://code.jquery.com/jquery-3.2.0.min.js"></script>
+<style>
+header{
+	padding : 25px;
+	color: white;
+	background-color: black;
+	clear: left;
+	text-align: center;
+}
+</style>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel = "stylesheet" href = "/maps/documentation/javascript/cgc/demos/css">
+</head>
+<body>
+<header>
+<h1>
+시외 알람
+</h1>
+</header>
+<script type = "text/javascript" src = "https://maps.googles.com/maps/api/js?libraries=places&key=AIzaSyDr57Os3YuTD6fbFzu6D_-fDqAnZQt9eA0"></script>
+<form action = "alarm_result_suburb_train.html" method = "post">
+        <label for = "start_in">출발지</label>
+        <input name = "start" type = "text" id = "start_in" style="width: 500px;"/></input><br>
+        <script>
+            function init(){
+                var input = document.getElementById('start_in');
+                var autocomplete = new google.maps.places.Autocomplete(input);
+            }
+
+            google.maps.event.addDomListener(window, 'load', init);
+        </script>
+        <label for = "finish_in">목적지</label>
+        <input name = "finish" type = "text" id = "finish_in" style="width: 500px;"/></input>
+    <script>
+            function finit(){
+                var input = document.getElementById('finish_in');
+                var autocomplete = new google.maps.places.Autocomplete(input);
+            }
+
+            google.maps.event.addDomListener(window, 'load', finit);
+        </script>
+        <input type = "submit" value = "알람시작"/><br>
+</form>
+<div id = "map"></div>
+<script>
+    function initMap(){
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var map = new google.maps.Map(document.getElementById('map'), {
+        center : new google.maps.LatLng(latitude, longitude),
+        zoom:4
+    });
+    var map = new google.maps.Map(document.getElementById("googleMap"), initMap);
+    }
+</script>
+<script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDr57Os3YuTD6fbFzu6D_-fDqAnZQt9eA0&callback=initMap"async defer></script>
+</body>
+</html>

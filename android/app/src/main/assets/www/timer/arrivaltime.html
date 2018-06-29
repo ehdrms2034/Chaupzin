@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="kr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>예정 도착시간</title>
+
+   <script type="text/javascript" src="../cordova.js"></script>
+
+    <script src="js/libs/modernizr.min.js"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="js/libs/jquery-ui.min.js"></script>
+    <script src="js/libs/bootstrap.min.js"></script>
+    <script src="js/jquery.powerful-placeholder.min.js"></script>
+
+    <!-- Style CSS -->
+    <link href="css/bootstrap.css" media="screen" rel="stylesheet">
+    <link href="style.css" media="screen" rel="stylesheet">
+    
+    <!-- scripts -->
+    <script src="js/general.js"></script>
+
+    <script src="myjs/arrivaltime.js"></script>
+    <script src="myjs/system.js"></script>
+
+    <script> 
+    function input_station_ID(){
+        alert("추가완료");
+        var station = $('#StationName').val();
+        var cname = $('#CNAME').val();
+        var station_class =$('input:radio[name=vehicle]:checked').val();
+        var Station_updown =$('input:radio[name=path]:checked').val();
+        //alert(station+cname+station_class);
+        var Station_name = station;
+        var Cityname=cname;
+        var Station_class=station_class;
+        
+        
+        var Contents = "<div class='widget-container boxed'> <div class='inner clearfix'> <table class = 'table' border ='1'><tr><td>시</td><td>분</td></tr>";
+            
+            
+
+
+        cordova.odsayplugin.requestSearchStation(Station_name,Cityname,Station_class,function(success){
+        //코르도바 역 검색 부분
+            var x = JSON.parse(success);
+            var stationID = x.result.station[0].stationID;
+            //alert(stationID);
+                cordova.odsayplugin.requestSubwayTimeTable(stationID,"",function(data){
+                    var y = JSON.parse(data);
+                    if(Station_updown=="up"){
+                    $.each(y.result.OrdList.up.time,function(key,value){
+                        let length=y.result.OrdList.up.time.length;
+                        Contents += "<tr><td>"+value.Idx+"  </td><td>"+value.list+"</td>";
+                    });
+                }else{
+                    $.each(y.result.OrdList.down.time,function(key,value){
+                        let length=y.result.OrdList.down.time.length;
+                        Contents += "<tr><td>"+value.Idx+"  </td><td>"+value.list+"</td>";
+                    });
+                }
+                    Contents += "</table><div class='field_text'><input type='text' name='set_hour' id='set_hour' placeholder='시'></div><div class='field_text'>"
+                    +"<input type='text' name='set_min' id='set_min' placeholder='분'></div><span class='btn btn-blue' style='margin-left: 40%'><input name='set_alarm' id='set_alarm' type='button' value='해당역 즐겨찾기 알람 저장' /></span></div></div>";
+                    var Node = document.getElementById("Input_info");
+                    Node.innerHTML=Contents;
+                    //즐겨찾기 알람 설정 부분
+                    $('#set_alarm').click(function(){
+                            for(let i = 0; i<5; i++){
+                                let local = localStorage.getItem("odsay_checked_alarm"+i);
+                                if(local!=null){continue;}
+                                let hour = $('#set_hour').val();
+                                let min = $('#set_min').val();
+                                let vehicles = station_class;
+                                if(Station_updown=="up") {var paths = y.result.upWay;}
+                                else {var paths = y.result.downWay;}
+                                let c_stationname = y.result.stationName;
+                                var source = new Object();
+                                source.hour=hour;
+                                source.min=min;
+                                source.paths=paths;
+                                source.stationName=c_stationname;
+                                source.vehicle=vehicles;
+                                var source2 = JSON.stringify(source);
+                                alert(source2);
+                                localStorage.setItem("odsay_checked_alarm"+i,source2);
+                                alert("즐겨 찾기 설정 완료");
+                                location.reload();
+                                break;
+                            }
+                                 
+                            
+
+                    });
+                //alert(data);
+                },null);
+
+        },null);
+        
+        
+
+        //requestSearchStation(station,cname,station_class);
+        
+        
+
+        
+        
+        
+
+        
+    }
+
+    $(document).ready(function(){
+        $('input:radio[name=vehicle]').change(function(){
+        $('#up_down').toggle();
+    });
+
+
+    })
+    
+    
+    </script>
+    
+
+</head>
+<body>
+    <div class ="container">
+        <div class="widget-container boxed">
+            <h3 class="widget-title">예정 도착시간</h3>
+            <div class="inner">
+                    <div class="field_text">
+                            도시 이름  <input type="text" name="CNAME" id="CNAME" placeholder="도시 이름">
+                    </div>
+                    <div class="field_text">
+                           
+                            역 및 정거장 이름  <input type="text" name="StationName" id="StationName" placeholder="역 및 정거장 이름">
+
+                    </div>
+                    <div class="rowRadio radio-filled">
+                            <input type="radio" name="vehicle" value="2" id="vehicle1" checked="checked">
+                            <label for="vehicle">지하철</label>
+                            <input type="radio" name="vehicle" value="1" id="vehicle2">
+                            <label for="vehicle">버스</label>  
+                        
+                    </div>
+                    <div class="rowRadio radio-filled" id="up_down" name="up_down">
+                            <input type="radio" name="path" value="up" id="path" checked="checked">
+                            <label for="path">상행선</label>
+                            <input type="radio" name="path" value="down" id="path">
+                            <label for="path">하행선</label>  
+
+                    </div>
+
+                    </div>
+                    <a onclick="input_station_ID()" class="btn" style="margin-left: 70%" ><span>검색</span></a>
+            </div>
+        
+
+        <div class="widget-container boxed">
+            <div class="inner">
+                <div id="Input_info" class="rowRadio radio-filled">
+                    
+                </div>
+            </div>
+        </div>        
+    </div>
+    
+
+
+</body>
+</html>

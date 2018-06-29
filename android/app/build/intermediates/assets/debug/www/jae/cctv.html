@@ -1,0 +1,163 @@
+
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>교통정보 OPEN API</title>
+    <style type="text/css">
+	* {
+		font-family:Arial, Verdana, sans-serif, Dotum, Gulim;
+	}
+	html, body { width:100%; height:100%; }
+	body { margin:0; padding:0; }
+</style>
+    <script>
+
+    </script>
+</head>
+<body>
+<div id="map" style="width:100%; height:100%;"></div>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="http://openapi.its.go.kr/javascript/jquery.xml2json.js"></script>
+<script type="text/javascript" src="http://openlayers.org/api/2.13.1/OpenLayers.js"></script>
+<script type="text/javascript" src="http://openapi.its.go.kr/javascript/OpenLayers.Layer.Vworld.js"></script>
+<script type="text/javascript">
+	var API_DOMAIN = 'http://openapi.its.go.kr';
+	var key = '1526319013022';
+	var NOPOP_LAYERS = [];
+	var POPUP_LAYERS = [];
+	var EPSG_4326 = new OpenLayers.Projection('EPSG:4326');
+	var EPSG_900913 =  new OpenLayers.Projection('EPSG:900913');
+	function getCORSURL(uri, type) {
+		var yqlUri = 'http://query.yahooapis.com/v1/public/yql?q=' + 
+			encodeURIComponent('SELECT * FROM ' + type + ' where url="' + uri + '"');
+		if (type == 'html') {
+			yqlUri += encodeURIComponent(' and xpath="/*"');
+		} else if (type == 'json') {
+			yqlUri += "&callback=&format=json";
+		} else if (type == 'xml') {
+			yqlUri += "&format=xml";
+		}
+		return yqlUri;
+	}
+</script>
+<script type="text/javascript" src="http://openapi.its.go.kr/javascript/openapi.cctv.js"></script>
+<script type="text/javascript">
+    //내 위치 설정
+    function geoFindMe(){
+        var output = document.getElementById("out");
+
+        if(!navigator.geolocation){
+            output.innerHTML = "<p>사용자의 gps를 사용할 수 없습니다.</p>";
+            return;
+        }
+
+        function success(position){
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+            var img = new Image();
+            img.src = "http://maps.googleapis.com/maps/api/staticmap?center=" + latitude + "," + longitude + "&zoom=13&size=300x300&sensor=false";
+
+            output.appendChild(img);
+        };
+
+        function error(){
+            output.innerHTML = "사용자의 위치를 찾을 수 없습니다.";
+        };
+
+        output.innerHTML = "<p>Locating..<p>";
+
+        navigator.geolocation.getCurrentPosition(success, error);
+    }
+    //
+	window.onload = init;
+	var map;
+	function init() {
+		// 지도 생성
+		map = new OpenLayers.Map({
+			div: "map",
+			projection: EPSG_900913,
+			displayProjection: EPSG_4326,
+			units: "m",
+			maxExtent: new OpenLayers.Bounds(13489539, 3828608, 14943678, 4881604),
+			restrictedExtent: new OpenLayers.Bounds(13489539, 3828608, 14943678, 4881604),
+			layers: [
+				new OpenLayers.Layer.Vworld_Base('Vworld', {numZoomLevels:17, transitionEffect:''})
+			],
+			controls: [
+				new OpenLayers.Control.Navigation()
+				,new OpenLayers.Control.MousePosition()
+				,new OpenLayers.Control.ScaleLine()
+				,new OpenLayers.Control.PanZoomBar({zoomWorldIcon:true})
+				,new OpenLayers.Control.LayerSwitcher()
+				,new OpenLayers.Control.OverviewMap({layers:[new OpenLayers.Layer.OSM()], mapOptions:{projection:'EPSG:900913'}, autoPan:true, maximized:true})
+			]
+		});
+		// 지도 레벨 제한
+		map.events.on({
+			"zoomend": function(event) {
+				if (map.getZoom() < 7) map.setCenter(map.getCenter(), 7);
+				if (map.getZoom() > 14) map.setCenter(map.getCenter(), 14);
+			}
+		});
+		// 지도 초기 위치 설정
+		map.setCenter(new OpenLayers.LonLat(latitude, longitude), 7);
+		// CCTV 시작
+		var cctv = new CCTV('cctvLayer');
+		cctv.getList();
+		POPUP_LAYERS.push(cctv.getLayer());
+		// CCTV 종료
+		map.addLayers(NOPOP_LAYERS);
+		map.addLayers(POPUP_LAYERS);
+		// 아이콘 클릭시 팝업 설정 시작
+		var controlSelect = new OpenLayers.Control.SelectFeature(POPUP_LAYERS, {
+			clickout:true, toggle:false, multiple:false,
+			onSelect:function(feature){
+				var data = feature.data;
+				var message ='';
+				switch(feature.layer.id) {
+				    case 'weatherLayer':
+			    		message += weather.getMessage(data);
+				    break;
+				    case 'constructionLayer':
+				    	message += construction.getMessage(data);
+				    break;
+				    case 'accidentLayer':
+				    	message += accident.getMessage(data);
+				    break;
+				    case 'cctvLayer':
+				    	message += cctv.getMessage(data);
+				    break;
+				    case 'warningLayer':
+				    	message += warning.getMessage(data);
+				    break;
+				    case 'tourLayer':
+				    	message += tour.getMessage(data);
+				    break;
+				    default:
+			    		return false;
+				}
+				var selectedFeature = feature;
+				var popup = new OpenLayers.Popup.FramedCloud("popup", 
+					feature.geometry.getBounds().getCenterLonLat(), null,
+					message, null, true, function(e){controlSelect.unselect(selectedFeature);});
+				popup.minSize = new OpenLayers.Size(200,200);
+				popup.maxSize = new OpenLayers.Size(400,400);
+				feature.popup = popup;
+				map.addPopup(popup);
+			},
+			onUnselect:function(feature){
+				map.removePopup(feature.popup);
+				feature.popup.destroy();
+				feature.popup = null;
+			}
+		});
+		map.addControls([controlSelect]);
+		controlSelect.activate();
+		// 아이콘 클릭시 팝업 설정 종료
+	}
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<!--[if lt IE 7 ]><html lang="en" class="no-js ie6"> <![endif]-->
+<!--[if IE 7 ]><html lang="en" class="no-js ie7"> <![endif]-->
+<!--[if IE 8 ]><html lang="en" class="no-js ie8"> <![endif]-->
+<!--[if IE 9 ]><html lang="en" class="no-js ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--><html lang="en" class="no-js"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+<meta name="author" content="">
+<meta name="keywords" content="">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title></title>
+
+<!-- main JS libs -->
+
+    <script type="text/javascript" src="../cordova.js"></script>
+
+<script src="js/libs/modernizr.min.js"></script>
+<script src="js/libs/jquery-1.10.0.js"></script>
+<script src="js/libs/jquery-ui.min.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+
+<!-- Style CSS -->
+<link href="css/bootstrap.css" media="screen" rel="stylesheet">
+<link href="style.css" media="screen" rel="stylesheet">
+
+<!-- scripts -->
+<script src="js/general.js"></script>
+
+<!-- Include all needed stylesheets and scripts here -->
+
+<script src="js/progressbar.js"></script>
+<script src="myjs/timer.js"></script>
+    <script src="myjs/system.js"></script>
+<script>
+</script>
+
+
+
+<!--[if lt IE 9]><script src="js/respond.min.js"></script><![endif]-->
+<!--[if gte IE 9]>
+<style type="text/css">
+    .gradient {filter: none !important;}
+</style>
+<![endif]-->
+</head>
+
+<body>
+    <!-- container -->
+    <div class="widget-container progressBars boxed">
+        <h3 class = "widget-title">환승 Timer</h3>
+        <div class="inner" >
+                    <div class="widget-container widget_avatar boxed">
+                            <div class="avatar-image">
+                                
+                                    <img src="./alarm-clock.png" alt="" width="300px" >
+                               
+                                </div>    
+                   
+                </div>
+                    <div id="progressBar2" class="progressbar style2" style="">
+                        <span class="mark-left">0%</span>
+                        <span class="mark-right">100%</span>
+                        <div class="percent" style="left: 0%;"><span>0%</span></div>
+                            <div class="pbar ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                               
+                            </div>
+                        <div class="elapsed">30:00</div>
+                        <div class="remained">00:00</div>
+                    </div>
+
+                    <div class="choice">
+                        <ul class="stats-links clearfix">
+                            <li class="first"><a onclick="ontimers(20)" hidefocus="true" style="outline: medium none currentcolor;"><i class="stats-icon stats-icon1"></i><br><span>Timer Start</span></a></li>
+                            <li><a href="#" hidefocus="true" style="outline: medium none currentcolor;"><i class="stats-icon stats-icon2"></i><br><span>Timer Stop</span></a></li>
+                            <li class="last"><a onclick="back_button()" hidefocus="true" style="outline: medium none currentcolor;"><i class="stats-icon stats-icon3"></i><br><span>Back</span></a></li>
+                        </ul>
+                    </div>
+    </div>
+    </div>
+    <!--/ container -->
+</body>
+</html>
+
+
+<script>
+
+    /*
+     타이머가 온되있으면 timer값 받고 자동으로 시작되게끔 하자
+    */
+
+</script>

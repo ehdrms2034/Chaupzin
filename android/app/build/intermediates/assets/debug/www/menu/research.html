@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<meta charset="EUC-KR">
+<title>재탐색</title>
+</head>
+<body>
+<header>
+	<input type = "checkbox" name = "transportation" value = "bus">버스<br>
+	<input type = "checkbox" name = "transportation" value = "subway">지하철<br>
+	<input type = "checkbox" name = "transportation" value = "citybus">시내버스<br>
+</header>
+<form action = "downtown_map.html" autocomplete="on" method="POST">
+	<fieldset>
+	<legend>재탐색</legend>
+	<input type = "text" name = "start" value = "now_location"><br>
+	<input type = "text" name = "finish">
+	<input type = "submit" value = "검색">
+	<input type = "reset">초기화<br>
+	</fieldset>
+	</form>
+</body>
+</html>

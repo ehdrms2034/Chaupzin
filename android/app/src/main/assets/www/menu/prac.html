@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type = "text/javascript">
+    	function setLocalStorage(){
+    		var textBox = document.querySelector('#textBox1');
+    		window.localStorage['key1'] = textBox.value;
+    	}
+    	function getLocalStorage(){
+    		var textBox = document.querySelector('#textBox2');
+    		textBox.value = window.localStorage['key1'];
+    	}
+    	function setSessionStorage(){
+    		var textBox = document.querySelector('#textBox3');
+    		window.sessionStorage['key1'] = textBox.value;
+  
+    	}
+    	function getSessionStorage(){
+    		var textBox = document.querySelector('#textBox4');
+    		textBox.value = window.sessionStorage['key1'];
+    	}
+    </script>
+  </head>
+  <body>
+    <input type = "text" id = "textBox1">
+    <button onclick = "setLocalStorage()">로컬스토로지 저장</button>
+    <br>
+    <input type = "text" id = "textBox2">
+    <button onclick = "getLocalStorage()">로컬스토로지 조회</button>
+    <hr>
+    <input type = "text" id = "textBox3">
+    <button onclick = "setSessionStorage()">세션스토로지 저장</button>
+	<br>
+    <input type = "text" id = "textBox4">
+    <button onclick = "getSessionStorage()">세션스토로지 조회</button>
+  </body>
+</html>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="kr">
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+     KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+<html>
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+    <!--
+    Customize this policy to fit your own app's needs. For more guidance, see:
+        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+</head>
+<body>
+        <script src="timer/js/libs/modernizr.min.js"></script>
+        <script src="timer/js/libs/bootstrap.min.js"></script>
+        
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript" src="js/test.js"></script>
+<script type="text/javascript" src="js/backgroundtimer.js"></script>
+
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!-- Style CSS -->
+<link href="timer/css/bootstrap.css" media="screen" rel="stylesheet">
+<link href="timer/style.css" media="screen" rel="stylesheet">
+
+<!-- scripts -->
+<script src="js/general.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    testgps();
+    console.log("위치정보 초기화 시작");
+});
+
+function deletes(){
+    for(let i = 0; i<5;i++){
+        localStorage.removeItem('odsay_checked_alarm'+i);
+    }
+    alert("데이터 삭제 완료");
+}
+    </script>
+    </script>
+    <div class="widget-container boxed">
+        <h3 class="widget-title">메뉴</h3>
+        <div class="inner">
+          
+                                <!-- Website Menu -->
+                                <div id="topmenu">
+                                        <ul class="dropdown clearfix boxed" style="width:600px;">
+                                            <li class="first"><a href="http://ehdrms2034.ohseon.com/woo/LoadSearch.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>길 찾기</span></a></li>
+                                            <li class="second"><a href="./timer/timer.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>환승 타이머</span></a></li>
+                                            <li class="thired"><a href="http://ehdrms2034.ohseon.com/woo/toilet.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>화장실</span></a></li>
+                                            <li class="thired"><a href="./timer/arrivaltime.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>예상도착시간</span></a></li>
+                                            <li class="fourth"><a href="./timer/bookmark.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>즐겨찾기 알람</span></a></li>
+                                            <li class="fifth"><a href="./maps.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>휴게소 게시판</span></a></li>
+                                            <li class="fifth"><a href="./jae/cctv.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>CCTV</span></a></li>
+                                            <li class="fifth"><a href="./jae/accident.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>사고 정보</span></a></li>
+                                            <li class="fifth"><a href="./jae/alarm_suburb.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>시내 알람</span></a></li>
+                                            <li class="fifth"><a href="./jae/alarm_suburb2.html" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>시외 알람</span></a></li>
+                                            <li class="sixth"><a onclick="deletes()" hidefocus="true" style="outline: currentcolor medium; width:600px"><i class="icon-menu"></i><span>즐겨찾기 데이터 삭제</span></a></li>
+                                        </ul>
+                                    </div>
+                                    <!--/ Website Menu -->
+                                  
+            
+
+            <!-- place your content here -->
+        </div>
+    </div>
+
+
+
+
+    <div ></div>
+
+
+
+</body>
+</html>

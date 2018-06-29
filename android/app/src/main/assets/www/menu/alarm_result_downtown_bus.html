@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <title>Insert title here</title>
+    <style>
+header{
+	padding : 25px;
+	color : white;
+	background-color: black;
+	clear: left;
+	text-align: center;
+}
+</style>
+    <script>
+
+function searchBusLaneAJAX() {
+	var busNo = request.getParameter("busNo");
+	var xhr = new XMLHttpRequest();
+	var url = "https://api.odsay.com/v1/api/searchBusLane?apiKey={ZV2xs1frmrNCwI9qy/Y8dS59HqfgJPvpGTNC1vyi8p0}&busNo=" + busNo;
+	xhr.open("GET", url, true);
+	xhr.send();
+	xhr.onreadystatechange = function() {
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			var resultObj = JSON.parse(xhr.responseText);
+			console.log(resultObj.result);
+			var resultArr = resultObj["result"]["lane"];
+			console.log(resultArr);
+
+			var str = "";
+			for (var i = 0; i < resultArr.length; i++) {
+				str += "<div class='box'>";
+				str += "<p>지역이름 : " + resultArr[i].busCityName + "</p>";
+				str += "<p>버스회사 : " + resultArr[i].busCompanyNameKor + "</p>";
+				str += "<p>버스번호 : " + resultArr[i].busNo + "</p>";
+				str += "<p>출발점 / 도착점 : " + resultArr[i].busStartPoint + " - "
+					+ resultArr[i].busEndPoint + "</p>";
+				str += "</div>";
+			}
+			document.getElementById("resultDiv").innerHTML = str;
+		}
+	}
+}
+</script>
+</head>
+<body>
+<header>
+    <h1><script type="text/javascript">document.write(bus_num);</script>번의 노선</h1>
+</header>
+<!-- 버스 이용시, -->
+<div id = "resultDiv">
+</div>
+</body>
+</html>
